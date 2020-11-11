@@ -1,0 +1,5 @@
+rootProject.name = 'feesboek'
+
+include ':domain'
+include ':usecase'
+include ':api'
