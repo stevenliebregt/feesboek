@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.module.kotlin.KotlinModule
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.stevenliebregt.feesboek.data.exposed.ExposedSetup
 import io.javalin.Javalin
 import io.javalin.plugin.json.JavalinJackson
 import io.javalin.plugin.openapi.annotations.ContentType
@@ -15,6 +16,7 @@ import org.koin.core.inject
 import java.text.SimpleDateFormat
 
 class AppConfig : KoinComponent {
+    private val exposedSetup: ExposedSetup by inject() // TODO: Not the nicest place, maybe an interface for "before app start" things
     private val authConfig: AuthConfig by inject()
     private val endpointConfig: EndpointConfig by inject()
 
@@ -36,16 +38,18 @@ class AppConfig : KoinComponent {
             }
         }
 
-        JavalinJackson.configure(
-                jacksonObjectMapper()
-                        .findAndRegisterModules()
-                        .registerModule(KotlinModule())
-//                        .configure(DeserializationFeature.FAIL_ON_MISSING_CREATOR_PROPERTIES, false)
-//                        .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
-//                        .configure(SerializationFeature.WRITE_ENUMS_USING_TO_STRING, true)
-//                        .configure(DeserializationFeature.READ_ENUMS_USING_TO_STRING, true)
-//                        .configure(JsonParser.Feature.ALLOW_MISSING_VALUES, true)
-        )
+//        JavalinJackson.configure(
+//                jacksonObjectMapper()
+//                        .findAndRegisterModules()
+//                        .registerModule(KotlinModule())
+////                        .configure(DeserializationFeature.FAIL_ON_MISSING_CREATOR_PROPERTIES, false)
+////                        .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+////                        .configure(SerializationFeature.WRITE_ENUMS_USING_TO_STRING, true)
+////                        .configure(DeserializationFeature.READ_ENUMS_USING_TO_STRING, true)
+////                        .configure(JsonParser.Feature.ALLOW_MISSING_VALUES, true)
+//        )
+
+        exposedSetup.setup()
 
         authConfig.configure(app)
         endpointConfig.configure(app)

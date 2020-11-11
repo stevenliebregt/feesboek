@@ -26,7 +26,7 @@ class ExposedUserRepository(dataSource: DataSource) : Repository(dataSource), Us
     override fun add(entity: User) = transaction(connection) {
         val id = UsersTable.insertAndGetId { row ->
             row[email] = entity.email
-            row[password] = password
+            row[password] = entity.password // TODO: Hash
         }.value
 
         UsersTable.toDomain(UsersTable.select { UsersTable.id eq id }.first())

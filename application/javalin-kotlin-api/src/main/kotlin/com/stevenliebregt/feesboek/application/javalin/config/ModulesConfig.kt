@@ -6,6 +6,7 @@ import com.stevenliebregt.feesboek.application.javalin.web.endpoint.Endpoint
 import com.stevenliebregt.feesboek.application.javalin.web.endpoint.TokenEndpoint
 import com.stevenliebregt.feesboek.application.javalin.web.endpoint.UserEndpoint
 import com.stevenliebregt.feesboek.common.jwt.JwtProvider
+import com.stevenliebregt.feesboek.data.exposed.ExposedSetup
 import com.stevenliebregt.feesboek.data.exposed.ExposedUserRepository
 import com.stevenliebregt.feesboek.usecase.CreateUser
 import com.stevenliebregt.feesboek.usecase.repository.UserRepository
@@ -43,6 +44,8 @@ object ModulesConfig {
     }
 
     private val repositoryModule = module {
+        single { ExposedSetup(get()) } // Makes sure the tables are created
+
         single<UserRepository> { ExposedUserRepository(get()) }
     }
 

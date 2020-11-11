@@ -2,6 +2,7 @@ package com.stevenliebregt.feesboek.db.h2hikaricp
 
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
+import org.h2.tools.Server
 import javax.sql.DataSource
 
 class Database(jdbcUrl: String, username: String, password: String) {
@@ -13,5 +14,9 @@ class Database(jdbcUrl: String, username: String, password: String) {
 
             HikariDataSource(config)
         }
+    }
+
+    init {
+        Server.createWebServer("-web", "-webAllowOthers", "-webPort", "8100").start()
     }
 }
