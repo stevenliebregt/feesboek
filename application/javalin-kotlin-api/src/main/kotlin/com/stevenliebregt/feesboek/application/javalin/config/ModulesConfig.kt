@@ -1,6 +1,6 @@
 package com.stevenliebregt.feesboek.application.javalin.config
 
-import com.stevenliebregt.feesboek.application.javalin.util.jwt.JwtProvider
+import com.stevenliebregt.feesboek.common.jwt.JwtProvider
 import org.koin.dsl.bind
 import org.koin.dsl.module
 

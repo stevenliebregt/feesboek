@@ -17,6 +17,8 @@ repositories {
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+
+    implementation "com.auth0:java-jwt:$auth0_jwt_version"
 }
 
 compileKotlin {

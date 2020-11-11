@@ -1,8 +1,6 @@
 package com.stevenliebregt.feesboek.application.javalin.config
 
-import com.auth0.jwt.exceptions.TokenExpiredException
-import com.auth0.jwt.interfaces.DecodedJWT
-import com.stevenliebregt.feesboek.application.javalin.util.jwt.JwtProvider
+import com.stevenliebregt.feesboek.common.jwt.JwtProvider
 import io.javalin.Javalin
 import io.javalin.core.security.Role
 import io.javalin.http.Context
@@ -13,38 +11,30 @@ internal enum class Roles : Role {
     AUTHENTICATED
 }
 
-private const val headerTokenName = "Authorization"
-
 class AuthConfig(private val jwtProvider: JwtProvider) {
     fun configure(app: Javalin) {
         app.config.accessManager { handler, ctx, permittedRoles ->
             try {
-                val jwtToken = getJwtTokenHeader(ctx)
-                val userRole = getUserRole(jwtToken) ?: Roles.ANYONE
+                val token = jwtProvider.decodeJWT(getHeaderJwtToken(ctx) ?: throw ForbiddenResponse())
 
-                permittedRoles.takeIf { !it.contains(userRole) }?.apply { throw ForbiddenResponse() }
-                ctx.attribute("email", getEmail(jwtToken))
+                val email = token.subject
+                val role = token.claims["role"]?.toString()?.let { Roles.valueOf(it) } ?: Roles.ANYONE
+
+                permittedRoles.takeIf { !it.contains(role) }?.apply { throw ForbiddenResponse() }
+                ctx.attribute("email", email)
 
                 handler.handle(ctx)
-            } catch (exception: TokenExpiredException) {
-                throw ForbiddenResponse("Your token has expired")
+            } catch (exception: Exception) {
+                throw ForbiddenResponse("Invalid token")
             }
         }
     }
 
-    private fun getJwtTokenHeader(ctx: Context): DecodedJWT? {
-        val tokenHeader = ctx.header(headerTokenName)?.substringAfter("Token")?.trim()
-                ?: return null
+    private fun getHeaderJwtToken(ctx: Context): String? = ctx.header(AUTHORIZATION_HEADER_NAME)
+            ?.substringAfter("Token")
+            ?.trim()
 
-        return jwtProvider.decodeJWT(tokenHeader)
-    }
-
-    private fun getEmail(jwtToken: DecodedJWT?): String? {
-        return jwtToken?.subject
-    }
-
-    private fun getUserRole(jwtToken: DecodedJWT?): Role? {
-        val userRole = jwtToken?.getClaim("role")?.asString() ?: return null
-        return Roles.valueOf(userRole)
+    companion object {
+        private const val AUTHORIZATION_HEADER_NAME = "Authorization"
     }
 }
