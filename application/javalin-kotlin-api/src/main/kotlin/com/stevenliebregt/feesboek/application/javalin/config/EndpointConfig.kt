@@ -1,13 +1,14 @@
 package com.stevenliebregt.feesboek.application.javalin.config
 
-import com.stevenliebregt.feesboek.application.javalin.web.router.IRouter
+import com.stevenliebregt.feesboek.application.javalin.web.endpoint.Endpoint
 import io.javalin.Javalin
 import org.koin.core.KoinComponent
 
-class RouterConfig : KoinComponent {
+class EndpointConfig : KoinComponent {
     fun configure(app: Javalin) {
+        // Find all registered endpoint classes in the container
         getKoin()
-                .getAll<IRouter>()
+                .getAll<Endpoint>()
                 .forEach { it.register(app) }
     }
 }

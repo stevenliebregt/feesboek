@@ -8,5 +8,17 @@ import org.jetbrains.exposed.sql.transactions.transaction
 import javax.sql.DataSource
 
 class ExposedUserRepository(dataSource: DataSource) : Repository(dataSource), UserRepository {
-    override fun findAllUsers(): List<User> = transaction(connection) { UsersTable.selectAll().map { UsersTable.toDomain(it) } }
+    override fun all(): List<User> = transaction(connection) { UsersTable.selectAll().map { UsersTable.toDomain(it) } }
+
+    override fun findByEmail(email: String): User? {
+        TODO("Not yet implemented")
+    }
+
+    override fun add(entity: User): User {
+        TODO("Not yet implemented")
+    }
+
+    override fun update(entity: User): User {
+        TODO("Not yet implemented")
+    }
 }

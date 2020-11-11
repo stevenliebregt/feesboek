@@ -23,6 +23,7 @@ repositories {
 dependencies {
     implementation project(':common')
     implementation project(':domain')
+    implementation project(':usecase')
     implementation project(':h2-hikaricp')
     implementation project(':exposed')
 

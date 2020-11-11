@@ -5,6 +5,7 @@ import io.javalin.Javalin
 import io.javalin.core.security.Role
 import io.javalin.http.Context
 import io.javalin.http.ForbiddenResponse
+import java.lang.Exception
 
 internal enum class Roles : Role {
     ANYONE,
@@ -14,19 +15,25 @@ internal enum class Roles : Role {
 class AuthConfig(private val jwtProvider: JwtProvider) {
     fun configure(app: Javalin) {
         app.config.accessManager { handler, ctx, permittedRoles ->
-            try {
-                val token = jwtProvider.decodeJWT(getHeaderJwtToken(ctx) ?: throw ForbiddenResponse())
+            val authorizationHeaderContent = getHeaderJwtToken(ctx)
 
-                val email = token.subject
-                val role = token.claims["role"]?.toString()?.let { Roles.valueOf(it) } ?: Roles.ANYONE
+            if (authorizationHeaderContent == null) {
+                if (permittedRoles.contains(Roles.AUTHENTICATED)) throw ForbiddenResponse("No authorization header")
+            } else {
+                try {
+                    val token = jwtProvider.decodeJWT(authorizationHeaderContent)
 
-                permittedRoles.takeIf { !it.contains(role) }?.apply { throw ForbiddenResponse() }
-                ctx.attribute("email", email)
+                    val email = token.subject
+                    val role = token.getClaim("role")?.let { Roles.valueOf(it) } ?: Roles.ANYONE
 
-                handler.handle(ctx)
-            } catch (exception: Exception) {
-                throw ForbiddenResponse("Invalid token")
+                    permittedRoles.takeIf { !it.contains(role) }?.apply { throw ForbiddenResponse("Not enough rights") }
+                    ctx.attribute("email", email)
+                } catch (exception: Exception) { // Failed to decode token
+                    throw ForbiddenResponse("Invalid token")
+                }
             }
+
+            handler.handle(ctx)
         }
     }
 

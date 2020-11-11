@@ -1,6 +1,10 @@
 package com.stevenliebregt.feesboek.application.javalin.config
 
+import com.fasterxml.jackson.core.JsonParser
+import com.fasterxml.jackson.databind.DeserializationFeature
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.SerializationFeature
+import com.fasterxml.jackson.module.kotlin.KotlinModule
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import io.javalin.Javalin
 import io.javalin.plugin.json.JavalinJackson
@@ -12,7 +16,7 @@ import java.text.SimpleDateFormat
 
 class AppConfig : KoinComponent {
     private val authConfig: AuthConfig by inject()
-//    private val routerConfig: RouterConfig by inject() // TODO:
+    private val endpointConfig: EndpointConfig by inject()
 
     fun setup(): Javalin {
         this.configureMapper()
@@ -32,8 +36,19 @@ class AppConfig : KoinComponent {
             }
         }
 
+        JavalinJackson.configure(
+                jacksonObjectMapper()
+                        .findAndRegisterModules()
+                        .registerModule(KotlinModule())
+//                        .configure(DeserializationFeature.FAIL_ON_MISSING_CREATOR_PROPERTIES, false)
+//                        .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+//                        .configure(SerializationFeature.WRITE_ENUMS_USING_TO_STRING, true)
+//                        .configure(DeserializationFeature.READ_ENUMS_USING_TO_STRING, true)
+//                        .configure(JsonParser.Feature.ALLOW_MISSING_VALUES, true)
+        )
+
         authConfig.configure(app)
-//        routerConfig.configure(app) // TODO:
+        endpointConfig.configure(app)
 
         return app
     }

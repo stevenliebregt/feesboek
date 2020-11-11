@@ -11,8 +11,6 @@ fun main() {
 
         printLogger()
 
-        println("Hello, world!")
-
         modules(ModulesConfig.allModules)
 
         AppConfig()
