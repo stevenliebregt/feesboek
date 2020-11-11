@@ -9,9 +9,6 @@ buildscript {
 }
 
 apply plugin: 'kotlin'
-apply plugin: 'application'
-
-mainClassName = 'com.stevenliebregt.feesboek.api.AppKt'
 
 repositories {
     mavenCentral()
@@ -19,8 +16,6 @@ repositories {
 }
 
 dependencies {
-    implementation project(':h2-exposed')
-
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
 }
 
