@@ -15,7 +15,7 @@ object ModulesConfig {
                     getProperty("db.jdbc_url"),
                     getProperty("db.username"),
                     getProperty("db.password")
-            ).getDataSource()
+            ).dataSource
         }
     }
 

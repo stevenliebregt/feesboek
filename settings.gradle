@@ -2,12 +2,15 @@ rootProject.name = 'feesboek'
 
 include ':common'
 
+include ':h2-hikaricp'
+project(":h2-hikaricp").projectDir = file("db/h2-hikaricp")
+
 include ':domain'
 
 include ':usecase'
 
-include ':h2-exposed'
-project(":h2-exposed").projectDir = file("data/h2-exposed")
+include ':exposed'
+project(":exposed").projectDir = file("data/exposed")
 
 include ':javalin-kotlin-api'
 project(":javalin-kotlin-api").projectDir = file("application/javalin-kotlin-api")

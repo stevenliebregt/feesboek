@@ -20,6 +20,8 @@ dependencies {
     implementation project(':usecase')
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+
+    implementation "org.jetbrains.exposed:exposed-core:$exposed_version"
 }
 
 compileKotlin {
