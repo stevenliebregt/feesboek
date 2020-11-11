@@ -47,7 +47,7 @@ object ModulesConfig {
     }
 
     private val useCaseModule = module {
-        single { CreateUser(get()) }
+        single { CreateUser(get(), get()) }
     }
 
     val allModules = listOf(
