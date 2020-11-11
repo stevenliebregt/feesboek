@@ -1,5 +1,22 @@
 package com.stevenliebregt.feesboek.application.javalin
 
+import com.stevenliebregt.feesboek.application.javalin.config.AppConfig
+import com.stevenliebregt.feesboek.application.javalin.config.ModulesConfig
+import org.koin.core.context.startKoin
+
 fun main() {
-    println("Hello, world!")
+    startKoin {
+        fileProperties()
+        environmentProperties()
+
+        printLogger()
+
+        println("Hello, world!")
+
+        modules(ModulesConfig.allModules)
+
+        AppConfig()
+                .setup()
+                .start()
+    }
 }
