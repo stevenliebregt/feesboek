@@ -1,0 +1,4 @@
+allprojects {
+    group 'com.stevenliebregt'
+    version '0.0.1'
+}
