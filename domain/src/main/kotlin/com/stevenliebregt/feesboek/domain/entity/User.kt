@@ -4,7 +4,7 @@ data class User(
         private val id: Int,
         val email: String,
         val password: String,
-        val token: String?
+        var token: String?
 ) {
     class Builder {
         private var email: String = ""

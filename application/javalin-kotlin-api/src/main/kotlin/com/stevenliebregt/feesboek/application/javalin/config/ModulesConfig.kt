@@ -8,7 +8,7 @@ import com.stevenliebregt.feesboek.application.javalin.web.endpoint.UserEndpoint
 import com.stevenliebregt.feesboek.common.jwt.JwtProvider
 import com.stevenliebregt.feesboek.data.exposed.ExposedSetup
 import com.stevenliebregt.feesboek.data.exposed.ExposedUserRepository
-import com.stevenliebregt.feesboek.usecase.CreateUser
+import com.stevenliebregt.feesboek.usecase.CreateUserUseCase
 import com.stevenliebregt.feesboek.usecase.repository.UserRepository
 import org.koin.dsl.bind
 import org.koin.dsl.module
@@ -50,7 +50,7 @@ object ModulesConfig {
     }
 
     private val useCaseModule = module {
-        single { CreateUser(get(), get()) }
+        single { CreateUserUseCase(get(), get()) }
     }
 
     val allModules = listOf(
