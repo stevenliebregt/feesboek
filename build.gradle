@@ -1,4 +1,30 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    }
+}
+
+apply plugin: 'kotlin'
+
 allprojects {
     group 'com.stevenliebregt'
     version '0.0.1'
 }
+
+repositories {
+    mavenCentral()
+    jcenter()
+}
+
+task copyJars(type: Copy) {
+    from subprojects.collect { it.tasks.withType(Jar) }
+    into "$buildDir/allJars"
+}
+
+task stage(dependsOn: ['build', 'clean', 'copyJars'])
+build.mustRunAfter clean
+copyJars.mustRunAfter build

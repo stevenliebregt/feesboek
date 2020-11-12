@@ -1,8 +1,10 @@
 package com.stevenliebregt.feesboek.application.javalin.config
 
+import com.stevenliebregt.feesboek.application.javalin.web.controller.PostController
 import com.stevenliebregt.feesboek.application.javalin.web.controller.TokenController
 import com.stevenliebregt.feesboek.application.javalin.web.controller.UserController
 import com.stevenliebregt.feesboek.application.javalin.web.endpoint.Endpoint
+import com.stevenliebregt.feesboek.application.javalin.web.endpoint.PostEndpoint
 import com.stevenliebregt.feesboek.application.javalin.web.endpoint.TokenEndpoint
 import com.stevenliebregt.feesboek.application.javalin.web.endpoint.UserEndpoint
 import com.stevenliebregt.feesboek.common.jwt.JwtProvider
@@ -41,8 +43,8 @@ object ModulesConfig {
     }
 
     private val postModule = module {
-//        single { PostEndpoint(get()) } bind Endpoint::class
-//        single { PostController() }
+        single { PostEndpoint(get()) } bind Endpoint::class
+        single { PostController() }
     }
 
     private val repositoryModule = module {
