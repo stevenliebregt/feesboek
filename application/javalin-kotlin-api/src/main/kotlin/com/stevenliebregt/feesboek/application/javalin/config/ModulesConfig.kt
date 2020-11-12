@@ -9,6 +9,8 @@ import com.stevenliebregt.feesboek.common.jwt.JwtProvider
 import com.stevenliebregt.feesboek.data.exposed.ExposedSetup
 import com.stevenliebregt.feesboek.data.exposed.ExposedUserRepository
 import com.stevenliebregt.feesboek.usecase.CreateUserUseCase
+import com.stevenliebregt.feesboek.usecase.LoginUseCase
+import com.stevenliebregt.feesboek.usecase.LogoutUseCase
 import com.stevenliebregt.feesboek.usecase.repository.UserRepository
 import org.koin.dsl.bind
 import org.koin.dsl.module
@@ -30,7 +32,7 @@ object ModulesConfig {
 
     private val tokenModule = module {
         single { TokenEndpoint(get()) } bind Endpoint::class
-        single { TokenController() }
+        single { TokenController(get(), get()) }
     }
 
     private val userModule = module {
@@ -50,7 +52,9 @@ object ModulesConfig {
     }
 
     private val useCaseModule = module {
-        single { CreateUserUseCase(get(), get()) }
+        single { CreateUserUseCase(get()) }
+        single { LoginUseCase(get(), get()) }
+        single { LogoutUseCase(get()) }
     }
 
     val allModules = listOf(

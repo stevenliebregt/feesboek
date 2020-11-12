@@ -7,6 +7,7 @@ import org.jetbrains.exposed.sql.insertAndGetId
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
+import org.jetbrains.exposed.sql.update
 import javax.sql.DataSource
 
 class ExposedUserRepository(dataSource: DataSource) : Repository(dataSource), UserRepository {
@@ -32,7 +33,13 @@ class ExposedUserRepository(dataSource: DataSource) : Repository(dataSource), Us
         UsersTable.toDomain(UsersTable.select { UsersTable.id eq id }.first())
     }
 
-    override fun update(entity: User): User {
-        TODO("Not yet implemented")
+    override fun update(entity: User) = transaction(connection) {
+        UsersTable.update ({ UsersTable.id eq entity.id }) { row ->
+            row[email] = entity.email
+            row[password] = entity.password // TODO: Hash
+            row[token] = entity.token
+        }
+
+        entity
     }
 }
