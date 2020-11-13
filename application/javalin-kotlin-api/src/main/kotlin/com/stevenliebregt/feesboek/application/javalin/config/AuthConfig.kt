@@ -23,11 +23,11 @@ class AuthConfig(private val jwtProvider: JwtProvider) {
                 try {
                     val token = jwtProvider.decodeJWT(authorizationHeaderContent)
 
-                    val email = token.subject
+                    val userId = token.subject
                     val role = token.getClaim("role")?.let { Roles.valueOf(it) } ?: Roles.ANYONE
 
                     permittedRoles.takeIf { !it.contains(role) }?.apply { throw ForbiddenResponse("Not enough rights") }
-                    ctx.attribute("email", email)
+                    ctx.attribute("userId", userId.toInt())
                 } catch (exception: Exception) { // Failed to decode token
                     throw ForbiddenResponse("Invalid token")
                 }

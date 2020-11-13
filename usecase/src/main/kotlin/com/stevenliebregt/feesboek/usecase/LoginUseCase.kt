@@ -10,7 +10,7 @@ class LoginUseCase(private val userRepository: IUserRepository, private val jwtP
 
         if (user.password != password) throw InvalidCredentialsException()
 
-        user.token = jwtProvider.createJWT(user.email, mapOf("role" to "AUTHENTICATED")) // TODO: role is hidden in application package, fix this
+        user.token = jwtProvider.createJWT(user.id.toString(), mapOf("role" to "AUTHENTICATED")) // TODO: role is hidden in application package, fix this
         userRepository.update(user)
 
         return user.token ?: throw InvalidCredentialsException()

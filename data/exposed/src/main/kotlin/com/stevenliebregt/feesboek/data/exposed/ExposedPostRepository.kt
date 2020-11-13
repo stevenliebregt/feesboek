@@ -29,7 +29,7 @@ class ExposedPostRepository(dataSource: DataSource) : Repository(dataSource), IP
             row[title] = entity.title
             row[body] = entity.body
             row[createdAt] = entity.createdAt
-            row[authorId] = entity.author.id
+            row[authorId] = entity.author!!.id
         }.value
 
         commit()
@@ -42,7 +42,7 @@ class ExposedPostRepository(dataSource: DataSource) : Repository(dataSource), IP
             row[title] = entity.title
             row[body] = entity.body
             row[updatedAt] = entity.updatedAt
-            row[authorId] = entity.author.id
+            row[authorId] = entity.author!!.id
         }
 
         commit()

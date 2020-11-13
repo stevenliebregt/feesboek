@@ -21,11 +21,11 @@ class PostController(private val findPostUseCase: FindPostUseCase, private val c
     fun createPost(ctx: Context) {
         val body = ctx.bodyValidator<CreatePostBody>()
             .check({ !it.title.isNullOrBlank() }, "Title cannot be empty")
-            .check({ it.title?.let { title -> title.length > 8 } ?: false })
+            .check({ it.title?.let { title -> title.length > 8 } ?: false }, "Title needs to be longer than 8 characters")
             .check({ !it.body.isNullOrBlank() }, "Body cannot be empty")
             .get()
 
-        val post = createPostUseCase.create(body.toPost(), ctx.attribute<String>("email") ?: throw ForbiddenResponse())
+        val post = createPostUseCase.create(body.toPost(), ctx.attribute<Int>("userId") ?: throw ForbiddenResponse())
 
         ctx.status(200).json(post)
     }
