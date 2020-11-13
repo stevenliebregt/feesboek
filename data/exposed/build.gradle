@@ -23,6 +23,7 @@ dependencies {
 
     implementation "org.jetbrains.exposed:exposed-core:$exposed_version"
     implementation "org.jetbrains.exposed:exposed-jdbc:$exposed_version"
+    implementation "org.jetbrains.exposed:exposed-jodatime:$exposed_version"
 }
 
 compileKotlin {
