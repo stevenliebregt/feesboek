@@ -11,21 +11,21 @@ import com.stevenliebregt.feesboek.common.jwt.JwtProvider
 import com.stevenliebregt.feesboek.data.exposed.ExposedPostRepository
 import com.stevenliebregt.feesboek.data.exposed.ExposedSetup
 import com.stevenliebregt.feesboek.data.exposed.ExposedUserRepository
-import com.stevenliebregt.feesboek.usecase.CreateUserUseCase
-import com.stevenliebregt.feesboek.usecase.FindPostUseCase
-import com.stevenliebregt.feesboek.usecase.LoginUseCase
-import com.stevenliebregt.feesboek.usecase.LogoutUseCase
+import com.stevenliebregt.feesboek.usecase.*
 import com.stevenliebregt.feesboek.usecase.repository.IPostRepository
 import com.stevenliebregt.feesboek.usecase.repository.IUserRepository
 import org.koin.dsl.bind
 import org.koin.dsl.module
+import org.koin.experimental.builder.single
+import org.koin.experimental.builder.singleBy
 
 object ModulesConfig {
     private val configModule = module {
-        single { AppConfig() }
-        single { JwtProvider() }
-        single { AuthConfig(get()) }
-        single { EndpointConfig() }
+        single<AppConfig>()
+        single<JwtProvider>()
+        single<AuthConfig>()
+        single<EndpointConfig>()
+
         single {
             DbConfig(
                     getProperty("db.jdbc_url"),
@@ -36,32 +36,36 @@ object ModulesConfig {
     }
 
     private val tokenModule = module {
-        single { TokenEndpoint(get()) } bind Endpoint::class
-        single { TokenController(get(), get()) }
+        single<TokenEndpoint>() bind Endpoint::class
+        single<TokenController>()
     }
 
     private val userModule = module {
-        single { UserEndpoint(get()) } bind Endpoint::class
-        single { UserController(get()) }
+        single<UserEndpoint>() bind Endpoint::class
+        single<UserController>()
     }
 
     private val postModule = module {
-        single { PostEndpoint(get()) } bind Endpoint::class
-        single { PostController(get()) }
+        single<PostEndpoint>() bind Endpoint::class
+        single<PostController>()
     }
 
     private val repositoryModule = module {
-        single { ExposedSetup(get()) } // Makes sure the tables are created
+        single<ExposedSetup>()
 
-        single<IUserRepository> { ExposedUserRepository(get()) }
-        single<IPostRepository> { ExposedPostRepository(get()) }
+        singleBy<IUserRepository, ExposedUserRepository>()
+        singleBy<IPostRepository, ExposedPostRepository>()
     }
 
     private val useCaseModule = module {
-        single { CreateUserUseCase(get()) }
-        single { LoginUseCase(get(), get()) }
-        single { LogoutUseCase(get()) }
-        single { FindPostUseCase(get()) }
+        single<CreateUserUseCase>()
+        single<FindUserUseCase>()
+
+        single<LoginUseCase>()
+        single<LogoutUseCase>()
+
+        single<CreatePostUseCase>()
+        single<FindPostUseCase>()
     }
 
     val allModules = listOf(

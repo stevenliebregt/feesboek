@@ -6,13 +6,10 @@ import com.stevenliebregt.feesboek.usecase.repository.IUserRepository
 
 class CreateUserUseCase(private val userRepository: IUserRepository) {
     fun create(user: User): User {
+        // TODO: Validate input
+
         if (userRepository.findByEmail(user.email) != null) throw UserAlreadyExistsException(user.email)
 
-        val userToSave = User.Builder()
-                .email(user.email)
-                .password(user.password)
-                .build()
-
-        return userRepository.add(userToSave)
+        return userRepository.add(user)
     }
 }

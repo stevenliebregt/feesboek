@@ -32,6 +32,8 @@ class ExposedPostRepository(dataSource: DataSource) : Repository(dataSource), IP
             row[authorId] = entity.author.id
         }.value
 
+        commit()
+
         findById(id)!!
     }
 
@@ -42,6 +44,8 @@ class ExposedPostRepository(dataSource: DataSource) : Repository(dataSource), IP
             row[updatedAt] = entity.updatedAt
             row[authorId] = entity.author.id
         }
+
+        commit()
 
         findById(entity.id)!!
     }

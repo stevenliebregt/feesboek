@@ -20,6 +20,8 @@ dependencies {
     implementation project(':domain')
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+
+    implementation "joda-time:joda-time:$jodatime_version"
 }
 
 compileKotlin {

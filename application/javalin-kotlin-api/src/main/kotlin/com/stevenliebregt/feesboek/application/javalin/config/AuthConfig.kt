@@ -38,7 +38,7 @@ class AuthConfig(private val jwtProvider: JwtProvider) {
     }
 
     private fun getHeaderJwtToken(ctx: Context): String? = ctx.header(AUTHORIZATION_HEADER_NAME)
-            ?.substringAfter("Token")
+            ?.substringAfter("Bearer")
             ?.trim()
 
     companion object {

@@ -37,6 +37,8 @@ class ExposedUserRepository(dataSource: DataSource) : Repository(dataSource), IU
             row[password] = entity.password // TODO: Hash
         }.value
 
+        commit()
+
         findById(id)!!
     }
 
@@ -46,6 +48,8 @@ class ExposedUserRepository(dataSource: DataSource) : Repository(dataSource), IU
             row[password] = entity.password // TODO: Hash
             row[token] = entity.token
         }
+
+        commit()
 
         findById(entity.id)!!
     }
